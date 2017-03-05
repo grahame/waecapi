@@ -1,4 +1,4 @@
-# Read data from the West Australian Electoral Commissions's web API
+# Read data from the West Australian Electoral Commissions web API
 
 Usage:
 
