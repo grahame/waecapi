@@ -1,5 +1,5 @@
 import requests
-from pprint import pprint
+import sys
 
 API_BASE = 'https://api.elections.wa.gov.au/sgElections/'
 
@@ -8,6 +8,8 @@ def sg_elections(election_name):
     url = API_BASE
     if election_name:
         url = url + election_name
+    sys.stderr.write(url + '\n')
+    sys.stderr.flush()
     return requests.get(url).json()
 
 
@@ -21,8 +23,13 @@ def district_url(election_name, code):
 
 def get_candidates(url_base):
     url = url_base + '/candidates'
-    pprint(url)
-    return requests.get(url).json()
+    sys.stderr.write(url + '\n')
+    sys.stderr.flush()
+    json = requests.get(url).json()
+    if 'districtCandidates' in json:
+        return json['districtCandidates']
+    if 'regionCandidates' in json:
+        return json['regionCandidates']
 
 
 def election_candidates(election_name):
@@ -36,4 +43,5 @@ def election_candidates(election_name):
         if url is None:
             continue
         candidates = get_candidates(url)
-        pprint(candidates)
+        for candidate in candidates:
+            yield electorate, candidate
